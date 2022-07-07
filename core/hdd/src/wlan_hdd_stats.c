@@ -5813,6 +5813,12 @@ static int wlan_hdd_get_sta_stats(struct wiphy *wiphy,
 		adapter->rssi = 0;
 		adapter->hdd_stats.summary_stat.rssi = 0;
 	}
+	/* Do not report the RSSI >-10dB, VoWifi can not camp with this rssi range */
+	else if (adapter->rssi > -10) {
+		printk("RSSI %d to strong, remapping to -11 dB\n", adapter->rssi);
+		adapter->rssi = -11;
+		adapter->hdd_stats.summary_stat.rssi = -11;
+	}
 
 	sinfo->signal = adapter->rssi;
 	hdd_debug("snr: %d, rssi: %d",
@@ -5888,6 +5894,13 @@ static int wlan_hdd_get_sta_stats(struct wiphy *wiphy,
 		  (int)tx_rate_flags, (int)rx_rate_flags, (int)tx_mcs_index,
 		  (int)rx_mcs_index, (int)tx_nss, (int)rx_nss,
 		  (int)tx_dcm, (int)rx_dcm, (int)tx_gi, (int)rx_gi);
+
+	printk("[wlan]: BSSID=" QDF_MAC_ADDR_FMT " RSSI=%d, Rate=(%d, %d), "
+		"flags=(0x%x, 0x%x), MCS=(%d,%d), NSS=(%d,%d).\n", 
+		QDF_MAC_ADDR_REF(sta_ctx->conn_info.bssid.bytes),sinfo->signal, my_tx_rate, my_rx_rate,
+		(int)tx_rate_flags, (int)rx_rate_flags, 
+		(int)tx_mcs_index, (int)rx_mcs_index, (int)tx_nss, (int)rx_nss);
+
 
 	if (!ucfg_mlme_stats_is_link_speed_report_actual(hdd_ctx->psoc)) {
 		bool tx_rate_calc, rx_rate_calc;

@@ -14829,8 +14829,8 @@ end:
 
 const struct nla_policy qca_wlan_vendor_set_trace_level_policy[
 		QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_MAX + 1] = {
-	[QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_PARAM] =
-	VENDOR_NLA_POLICY_NESTED(qca_wlan_vendor_set_trace_level_policy),
+	[QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_PARAM] = {.type = NLA_NESTED },
+	//VENDOR_NLA_POLICY_NESTED(qca_wlan_vendor_set_trace_level_policy),
 	[QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_MODULE_ID] = {.type = NLA_U32 },
 	[QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_TRACE_MASK] = {.type = NLA_U32 },
 };
@@ -14916,6 +14916,9 @@ __wlan_hdd_cfg80211_set_trace_level(struct wiphy *wiphy,
 		      (tb2[QCA_WLAN_VENDOR_ATTR_SET_TRACE_LEVEL_TRACE_MASK]);
 
 		status = hdd_qdf_trace_enable(module_id, bit_mask);
+
+		hdd_info("set verbose mask %d for the category %d",
+				bit_mask, module_id);
 
 		if (status != 0)
 			hdd_err("can not set verbose mask %d for the category %d",

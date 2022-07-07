@@ -361,6 +361,10 @@ lim_tear_down_link_with_ap(struct mac_context *mac, uint8_t sessionId,
 	 */
 	pe_session->pmmOffloadInfo.bcnmiss = false;
 
+	pe_info("[wlan]: No ProbeRsp from AP after HB failure. Session %d Vdev %d reason code %d trigger %d",
+		pe_session->peSessionId, pe_session->vdev_id, reasonCode,
+		trigger);
+
 	/* Announce loss of link to Roaming algorithm */
 	/* and cleanup by sending SME_DISASSOC_REQ to SME */
 
@@ -476,7 +480,7 @@ void lim_handle_heart_beat_failure(struct mac_context *mac_ctx,
 			goto hb_handler_fail;
 		}
 		/* Beacon frame not received within heartbeat timeout. */
-		pe_warn("Heartbeat Failure");
+		pe_info("[wlan] Heartbeat Failure");
 		mac_ctx->lim.gLimHBfailureCntInLinkEstState++;
 
 		/*

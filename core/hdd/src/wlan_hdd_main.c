@@ -5786,7 +5786,7 @@ static void __hdd_set_multicast_list(struct net_device *dev)
 				0, ETH_ALEN);
 			memcpy(&(mc_list_request->mc_addr[i].bytes),
 				ha->addr, ETH_ALEN);
-			hdd_debug("mlist[%d] = "QDF_MAC_ADDR_FMT, i,
+			hdd_err("mlist[%d] = "QDF_MAC_ADDR_FMT, i,
 				  QDF_MAC_ADDR_REF(mc_list_request->mc_addr[i].bytes));
 			i++;
 		}
